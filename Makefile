@@ -292,6 +292,15 @@ bin/calico-felix: $(FELIX_GO_FILES) vendor/.up-to-date
                ( ldd bin/calico-felix 2>&1 | grep -q "Not a valid dynamic program" || \
 	             ( echo "Error: bin/calico-felix was not statically linked"; false ) )'
 
+kebinary: $(FELIX_GO_FILES)
+	@echo Building felix...
+	mkdir -p bin
+	$(DOCKER_GO_BUILD) \
+	    sh -c 'go build -v -i -o bin/calico-felix -v $(LDFLAGS) "github.com/projectcalico/felix" && \
+               ( ldd bin/calico-felix 2>&1 | grep -q "Not a valid dynamic program" || \
+	             ( echo "Error: bin/calico-felix was not statically linked"; false ) )'
+
+
 bin/k8sfv.test: $(K8SFV_GO_FILES) vendor/.up-to-date
 	@echo Building $@...
 	$(DOCKER_GO_BUILD) \
